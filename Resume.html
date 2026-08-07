@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lailatus Siyamu Nurrohmi — AI Trainer &amp; Health Data · Critical Care Nurse</title>
+<meta name="description" content="AI trainer and data annotator backed by 17 years as a registered nurse (7 in ICU/PICU). Health-data analysis, clinical web tools, Python, SQL, Tableau. Available 20–30 hrs/week, fully remote.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=JetBrains+Mono:wght@400;500;700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0B1120;
+  --ink2: #334155;
+  --ink3: #64748B;
+  --paper: #F8FAFC;
+  --surface: #FFFFFF;
+  --line: #E2E8F0;
+  --accent: #0E7C86;
+  --accent-light: #14A8B8;
+  --accent-soft: #E0F2F3;
+  --accent-deep: #0A5C66;
+  --gradient-start: #0B1120;
+  --gradient-end: #1A2A3A;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.05);
+  --shadow-md: 0 4px 24px -8px rgba(0,0,0,.10);
+  --shadow-lg: 0 20px 48px -12px rgba(0,0,0,.15);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Public Sans", system-ui, -apple-system, sans-serif;
+  font-size: 16.5px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  background-image:
+    radial-gradient(ellipse at 10% 20%, rgba(14,124,134,.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 80%, rgba(14,124,134,.03) 0%, transparent 50%);
+}
+
+.wrap { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: all .2s ease;
+  position: relative;
+}
+a:not(.no-underline)::after {
+  content: '';
+  position: absolute;
+  bottom: -2px; left: 0;
+  width: 100%; height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform .3s ease;
+}
+a:not(.no-underline):hover::after { transform: scaleX(1); transform-origin: left; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+/* ─── HEADER ─── */
+header {
+  position: relative;
+  padding: 80px 0 64px;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+  isolation: isolate;
+}
+header::before {
+  content: '';
+  position: absolute; inset: 0; z-index: 0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(14,124,134,.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(20,168,184,.08) 0%, transparent 40%),
+    radial-gradient(circle at 50% 100%, rgba(14,124,134,.05) 0%, transparent 30%);
+}
+header::after {
+  content: '';
+  position: absolute; inset: 0; z-index: 0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(255,255,255,.02) 27px, rgba(255,255,255,.02) 28px),
+    repeating-linear-gradient(90deg, transparent, transparent 27px, rgba(255,255,255,.02) 27px, rgba(255,255,255,.02) 28px);
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+}
+header .wrap { position: relative; z-index: 1; }
+
+.floating-dots { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.dot { position: absolute; border-radius: 50%; background: rgba(14,124,134,.08); animation: float 20s infinite ease-in-out; }
+.dot:nth-child(1) { width: 400px; height: 400px; top: -100px; right: -100px; animation-delay: 0s; }
+.dot:nth-child(2) { width: 250px; height: 250px; bottom: -50px; left: -50px; animation-delay: -5s; }
+.dot:nth-child(3) { width: 150px; height: 150px; top: 30%; left: 60%; animation-delay: -10s; }
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(20px, -30px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.9); }
+}
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 12px; font-weight: 500;
+  letter-spacing: .16em; text-transform: uppercase;
+  color: rgba(255,255,255,.6);
+  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 12px;
+}
+.eyebrow .dot-pulse {
+  display: inline-block; width: 8px; height: 8px;
+  background: #22C55E; border-radius: 50%;
+  animation: pulse-dot 2s infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .5; transform: scale(.7); }
+}
+
+h1 {
+  font-family: "Archivo", sans-serif;
+  font-weight: 900;
+  font-size: clamp(40px, 7vw, 64px);
+  line-height: 1.02; letter-spacing: -.02em;
+  color: #FFFFFF;
+  margin: 0 0 12px;
+  background: linear-gradient(135deg, #FFFFFF 0%, #B6C2D1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.role {
+  font-family: "Archivo", sans-serif;
+  font-weight: 700;
+  font-size: clamp(18px, 2.8vw, 24px);
+  color: rgba(255,255,255,.78);
+  margin: 0 0 20px;
+}
+.role b {
+  color: var(--accent-light); font-weight: 800;
+  background: rgba(14,124,134,.22);
+  padding: 2px 12px; border-radius: 6px;
+  display: inline-block;
+}
+
+.lede { max-width: 60ch; color: rgba(255,255,255,.72); font-size: 17px; line-height: 1.7; margin: 0; }
+
+/* signature: one calm trace that beats once */
+.trace { display: block; width: 100%; height: 52px; margin: 28px 0 4px; }
+.trace path {
+  fill: none; stroke: var(--accent-light); stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round;
+  stroke-dasharray: 1400; stroke-dashoffset: 1400;
+  animation: draw 2.4s ease-out .3s forwards;
+}
+@keyframes draw { to { stroke-dashoffset: 0; } }
+
+.hero-quote {
+  position: relative;
+  max-width: 48ch;
+  margin: 26px 0 0;
+  padding-left: 26px;
+  font-family: "Archivo", sans-serif;
+  font-weight: 600;
+  font-size: clamp(17px, 2.2vw, 20px);
+  line-height: 1.45;
+  letter-spacing: -.005em;
+  color: rgba(255,255,255,.92);
+}
+.hero-quote::before {
+  content: '\201C';
+  position: absolute;
+  left: -2px; top: -14px;
+  font-family: "Archivo", serif;
+  font-size: 52px;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--accent-light);
+  opacity: .8;
+}
+
+/* ─── SECTIONS ─── */
+section { padding: 60px 0; border-top: 1px solid var(--line); }
+section:first-of-type { border-top: none; }
+
+.section-header {
+  display: flex; align-items: baseline; justify-content: space-between;
+  margin-bottom: 32px; flex-wrap: wrap; gap: 12px;
+}
+h2 {
+  font-family: var(--mono);
+  font-size: 13px; font-weight: 700;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink3); margin: 0;
+  display: flex; align-items: center; gap: 12px;
+}
+h2 .badge-count {
+  background: var(--accent-soft); color: var(--accent);
+  padding: 1px 10px; border-radius: 99px;
+  font-size: 11px; font-weight: 700;
+}
+.section-sub { font-size: 14px; color: var(--ink3); }
+
+/* ─── PROJECTS ─── */
+.proj-grid { display: grid; gap: 24px; }
+
+.proj {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px; padding: 28px;
+  box-shadow: var(--shadow-sm);
+  transition: all .35s cubic-bezier(.25,.46,.45,.94);
+  display: grid; grid-template-columns: 180px 1fr; gap: 28px;
+  position: relative; overflow: hidden;
+}
+.proj::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-light));
+  opacity: 0; transition: opacity .35s ease;
+}
+.proj:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: rgba(14,124,134,.2); }
+.proj:hover::before { opacity: 1; }
+@media (max-width: 640px) { .proj { grid-template-columns: 1fr; gap: 16px; } }
+
+.thumb {
+  border-radius: 12px; overflow: hidden;
+  border: 1px solid var(--line); background: var(--paper);
+  aspect-ratio: 4/3;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .35s ease;
+}
+.proj:hover .thumb { border-color: var(--accent); }
+.thumb svg { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+.proj-content { display: flex; flex-direction: column; gap: 6px; }
+.proj h3 {
+  font-family: "Archivo", sans-serif; font-weight: 800; font-size: 21px;
+  letter-spacing: -.01em; margin: 0;
+  display: flex; align-items: center; flex-wrap: wrap; gap: 8px;
+}
+.proj h3 a { color: var(--ink); transition: color .2s ease; }
+.proj h3 a:hover { color: var(--accent); }
+.proj h3 a::after { display: none; }
+
+.live {
+  display: inline-block; font-family: var(--mono);
+  font-size: 10.5px; font-weight: 700; color: #fff;
+  background: linear-gradient(135deg, #22C55E, #16A34A);
+  padding: 1px 10px; border-radius: 99px; letter-spacing: .04em;
+  box-shadow: 0 2px 8px rgba(34,197,94,.3);
+}
+
+.tagline { font-family: var(--mono); font-size: 13px; color: var(--accent); margin: 0; font-weight: 500; }
+.proj p { margin: 0; color: var(--ink2); font-size: 15px; line-height: 1.65; }
+
+.stack {
+  font-family: var(--mono); font-size: 12px; color: var(--ink3);
+  margin: 0; padding-top: 2px;
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+.stack span {
+  background: var(--paper); padding: 2px 10px;
+  border-radius: 4px; border: 1px solid var(--line); font-size: 11px;
+}
+
+/* ─── ENGAGEMENTS ─── */
+.engage { display: grid; gap: 4px; }
+.engage-item {
+  display: grid; grid-template-columns: 1fr auto; gap: 4px 16px;
+  padding: 16px 18px; border-radius: 10px;
+  background: var(--surface); border: 1px solid var(--line);
+  transition: all .2s ease;
+}
+.engage-item:hover { border-color: var(--accent); box-shadow: var(--shadow-sm); }
+.engage-item h3 {
+  font-family: "Archivo", sans-serif; font-weight: 800; font-size: 16px; margin: 0;
+}
+.engage-item .who { font-family: var(--mono); font-size: 12px; color: var(--accent); margin: 2px 0 0; }
+.engage-item .when {
+  font-family: var(--mono); font-size: 12px; color: var(--ink3);
+  white-space: nowrap; text-align: right; padding-top: 3px;
+}
+.engage-item p.what { grid-column: 1 / -1; margin: 8px 0 0; font-size: 14.5px; color: var(--ink2); line-height: 1.6; }
+@media (max-width: 560px) {
+  .engage-item { grid-template-columns: 1fr; }
+  .engage-item .when { text-align: left; padding-top: 0; }
+}
+
+/* ─── SKILLS ─── */
+.skillgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px 32px; }
+.skill {
+  display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  padding: 12px 0; border-bottom: 1px solid var(--line);
+  transition: all .2s ease;
+}
+.skill:hover { padding-left: 8px; border-color: var(--accent); }
+.skill span:first-child {
+  font-weight: 700; font-size: 15px; color: var(--ink);
+  display: flex; align-items: center; gap: 8px;
+}
+.skill .skill-icon { display: inline-block; width: 6px; height: 6px; background: var(--accent); border-radius: 50%; opacity: .4; }
+.skill span:last-child { font-family: var(--mono); font-size: 12px; color: var(--ink3); text-align: right; white-space: nowrap; }
+
+/* ─── EXPERIENCE ─── */
+.timeline { position: relative; padding-left: 28px; }
+.timeline::before {
+  content: '';
+  position: absolute; left: 4px; top: 8px; bottom: 8px;
+  width: 2px; background: linear-gradient(to bottom, var(--accent), var(--accent-soft));
+  border-radius: 2px;
+}
+.job { position: relative; padding: 20px 0 20px 24px; }
+.job::before {
+  content: '';
+  position: absolute; left: -26px; top: 24px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--accent); border: 2px solid var(--surface);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+.job:last-child { padding-bottom: 0; }
+.job time { font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--accent); display: inline-block; margin-bottom: 4px; }
+.job h3 { font-family: "Archivo", sans-serif; font-weight: 800; font-size: 18px; margin: 0; }
+.job .org { color: var(--ink2); font-size: 15px; margin: 2px 0 8px; font-weight: 500; }
+.job p { margin: 0; color: var(--ink2); font-size: 15px; max-width: 58ch; line-height: 1.7; }
+
+/* ─── CERTIFICATIONS ─── */
+.certs { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.certs li {
+  padding: 14px 18px; border-radius: 10px;
+  display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  background: var(--surface); border: 1px solid var(--line);
+  transition: all .2s ease;
+}
+.certs li:hover { border-color: var(--accent); transform: translateX(4px); box-shadow: var(--shadow-sm); }
+.certs li .name { display: flex; align-items: center; gap: 12px; font-weight: 600; }
+.certs li .by { font-family: var(--mono); font-size: 12px; color: var(--ink3); white-space: nowrap; font-weight: 500; }
+.cert-mark { flex: none; color: var(--accent); opacity: .85; }
+
+/* ─── CONTACT ─── */
+.contact p { max-width: 56ch; color: var(--ink2); font-size: 17px; }
+.contact-links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+.contact-links a {
+  font-family: var(--mono); font-size: 13px; font-weight: 700;
+  border: 1.5px solid var(--ink); color: var(--ink);
+  border-radius: 10px; padding: 10px 20px;
+  transition: all .25s ease;
+  display: inline-flex; align-items: center; gap: 9px;
+}
+.contact-links a::after { display: none; }
+.contact-links a:hover { background: var(--ink); color: var(--paper); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.contact-links a.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.contact-links a.primary:hover { background: var(--accent-deep); border-color: var(--accent-deep); box-shadow: 0 8px 24px rgba(14,124,134,.3); }
+.contact-links svg { flex: none; }
+
+/* ─── FOOTER ─── */
+footer { padding: 40px 0 56px; border-top: 1px solid var(--line); background: var(--surface); }
+footer p { font-family: var(--mono); font-size: 12px; color: var(--ink3); margin: 0; text-align: center; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+  header { padding: 48px 0 40px; }
+  section { padding: 40px 0; }
+  .proj { padding: 20px; }
+  .certs li { flex-wrap: wrap; }
+  .certs li .by { white-space: normal; }
+}
+@media (max-width: 480px) {
+  .skillgrid { grid-template-columns: 1fr; }
+  .contact-links a { flex: 1; justify-content: center; }
+  .hero-quote { padding-left: 22px; }
+}
+
+/* ─── REDUCED MOTION ─── */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+  .trace path { stroke-dashoffset: 0; }
+  .dot { animation: none; }
+  .eyebrow .dot-pulse { animation: none; }
+  .proj:hover, .certs li:hover, .contact-links a:hover { transform: none; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="floating-dots" aria-hidden="true">
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </div>
+  <div class="wrap">
+    <p class="eyebrow">
+      <span class="dot-pulse" aria-hidden="true"></span>
+      Malang, Indonesia · UTC+7 · 20–30 hrs/week, fully remote
+    </p>
+    <h1>Lailatus Siyamu<br>Nurrohmi</h1>
+    <p class="role">
+      Critical Care Nurse <b>×</b> AI Training &amp; Health Data
+    </p>
+    <p class="lede">
+      Seventeen years of hospital nursing, the last seven of them in intensive care,
+      taught me what good data looks like — and what happens when it's wrong.
+      Today I split my time between AI training work across six platforms and
+      health-data projects: a 2,400-isolate resistance analysis, a live referral
+      platform, and clinical calculators nurses actually use at the bedside.
+    </p>
+    <svg class="trace" viewBox="0 0 860 52" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,26 L280,26 L298,26 L308,7 L320,45 L330,18 L340,26 L860,26"/>
+    </svg>
+    <blockquote class="hero-quote">
+      In critical care, a misplaced decimal is a wrong dose.
+      Data deserves the same double check.
+    </blockquote>
+  </div>
+</header>
+
+<section class="wrap" id="projects">
+  <div class="section-header">
+    <h2>Projects <span class="badge-count">5</span></h2>
+    <span class="section-sub">Built at the bedside · tested in practice</span>
+  </div>
+
+  <div class="proj-grid">
+    <article class="proj">
+      <div class="thumb" aria-hidden="true">
+        <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+          <rect width="200" height="150" fill="#F8FAFC"/>
+          <text x="16" y="20" font-family="monospace" font-size="7" font-weight="700" fill="#64748B">RESISTANCE BY UNIT</text>
+          <text x="70" y="33" font-family="monospace" font-size="6" fill="#94A3B8">ICU</text>
+          <text x="100" y="33" font-family="monospace" font-size="6" fill="#94A3B8">PICU</text>
+          <text x="134" y="33" font-family="monospace" font-size="6" fill="#94A3B8">IPIT</text>
+          <text x="16" y="47" font-family="monospace" font-size="6" fill="#334155">CR-Aba</text>
+          <rect x="64" y="39" width="26" height="11" rx="2" fill="#B4232A"/>
+          <rect x="96" y="39" width="26" height="11" rx="2" fill="#B4232A"/>
+          <rect x="128" y="39" width="26" height="11" rx="2" fill="#D97757"/>
+          <text x="16" y="63" font-family="monospace" font-size="6" fill="#334155">MRSA</text>
+          <rect x="64" y="55" width="26" height="11" rx="2" fill="#D97757"/>
+          <rect x="96" y="55" width="26" height="11" rx="2" fill="#B4232A"/>
+          <rect x="128" y="55" width="26" height="11" rx="2" fill="#EAB308"/>
+          <text x="16" y="79" font-family="monospace" font-size="6" fill="#334155">ESBL</text>
+          <rect x="64" y="71" width="26" height="11" rx="2" fill="#B4232A"/>
+          <rect x="96" y="71" width="26" height="11" rx="2" fill="#D97757"/>
+          <rect x="128" y="71" width="26" height="11" rx="2" fill="#EAB308"/>
+          <text x="16" y="95" font-family="monospace" font-size="6" fill="#334155">CR-Kpn</text>
+          <rect x="64" y="87" width="26" height="11" rx="2" fill="#D97757"/>
+          <rect x="96" y="87" width="26" height="11" rx="2" fill="#EAB308"/>
+          <rect x="128" y="87" width="26" height="11" rx="2" fill="#22C55E"/>
+          <line x1="16" y1="106" x2="184" y2="106" stroke="#E2E8F0"/>
+          <text x="16" y="122" font-family="monospace" font-size="14" font-weight="700" fill="#0E7C86">2/8</text>
+          <text x="52" y="118" font-family="monospace" font-size="6" fill="#334155">guideline conditions</text>
+          <text x="52" y="127" font-family="monospace" font-size="6" fill="#334155">fully aligned</text>
+          <text x="16" y="141" font-family="monospace" font-size="5.5" fill="#64748B">~2,400 isolates - 4 units - 2025</text>
+        </svg>
+      </div>
+      <div class="proj-content">
+        <h3>ICU Antibiogram &times; Guideline Audit</h3>
+        <p class="tagline">Local resistance data vs. empiric antibiotic policy</p>
+        <p>
+          Cross-checked the hospital's empiric antibiotic guideline against ~2,400 clinical
+          isolates from four intensive-care units. Mapped dominant pathogens and resistance
+          patterns per unit and specimen, then scored all eight covered clinical conditions:
+          only two were fully supported by local data. The audit surfaced two coverage gaps
+          the guideline had no answer for &mdash; MRSA at 39&ndash;55% and carbapenem-resistant
+          <i>A. baumannii</i> at 79&ndash;100% &mdash; and closed with six prioritized revision
+          recommendations, delivered as both a slide deck and an interactive web report.
+        </p>
+        <p class="stack">
+          <span>Data analysis</span> <span>HTML</span> <span>Chart.js</span> <span>PowerPoint</span> <span>Clinical microbiology</span>
+        </p>
+      </div>
+    </article>
+
+    <article class="proj">
+      <div class="thumb" aria-hidden="true">
+        <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+          <rect width="200" height="150" fill="#F8FAFC"/>
+          <text x="16" y="20" font-family="monospace" font-size="7" font-weight="700" fill="#64748B">REFERRAL NETWORK</text>
+          <circle cx="34" cy="46" r="9" fill="#fff" stroke="#0E7C86" stroke-width="1.5"/>
+          <circle cx="34" cy="76" r="9" fill="#fff" stroke="#0E7C86" stroke-width="1.5"/>
+          <circle cx="34" cy="106" r="9" fill="#fff" stroke="#0E7C86" stroke-width="1.5"/>
+          <text x="12" y="128" font-family="monospace" font-size="5.5" fill="#64748B">referring sites</text>
+          <path d="M44,46 C78,46 86,70 106,74" stroke="#0E7C86" stroke-width="1.2" fill="none" opacity=".55"/>
+          <path d="M44,76 C74,76 86,76 106,76" stroke="#0E7C86" stroke-width="1.2" fill="none" opacity=".55"/>
+          <path d="M44,106 C78,106 86,82 106,78" stroke="#0E7C86" stroke-width="1.2" fill="none" opacity=".55"/>
+          <rect x="108" y="60" width="76" height="32" rx="7" fill="#0E7C86"/>
+          <text x="146" y="74" font-family="monospace" font-size="7.5" font-weight="700" fill="#fff" text-anchor="middle">ICU / PICU</text>
+          <text x="146" y="85" font-family="monospace" font-size="6" fill="#B8E4E8" text-anchor="middle">fast track</text>
+          <rect x="108" y="100" width="76" height="26" rx="6" fill="#fff" stroke="#E2E8F0"/>
+          <text x="146" y="111" font-family="monospace" font-size="10" font-weight="700" fill="#0E7C86" text-anchor="middle">94.2%</text>
+          <text x="146" y="121" font-family="monospace" font-size="5.5" fill="#64748B" text-anchor="middle">patient satisfaction</text>
+        </svg>
+      </div>
+      <div class="proj-content">
+        <h3><a href="https://fast-track-rssa.com/" target="_blank" rel="noopener">SynClinics</a><span class="live">LIVE</span></h3>
+        <p class="tagline">Web referral platform for fast-track ICU &amp; PICU admissions</p>
+        <p>
+          A synchronized referral network connecting outside hospitals to intensive-care beds.
+          Referring sites submit a patient and required documents through one web form; the
+          receiving unit sees the case before the ambulance arrives, which cuts the paperwork
+          and phone relay that used to eat into the golden window. Built from a root-cause
+          analysis of referral delays and evaluated after rollout: 94.2% patient satisfaction
+          and 95% satisfaction among referring hospitals.
+        </p>
+        <p class="stack">
+          <span>Web platform</span> <span>Process design</span> <span>Root-cause analysis</span> <span>Service evaluation</span>
+        </p>
+      </div>
+    </article>
+    <article class="proj">
+      <div class="thumb" aria-hidden="true">
+        <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+          <rect width="200" height="150" fill="#F8FAFC"/>
+          <rect x="14" y="12" width="172" height="22" rx="6" fill="#0E7C86"/>
+          <text x="24" y="27" font-family="monospace" font-size="11" font-weight="700" fill="#fff">PediDrip</text>
+          <rect x="14" y="42" width="80" height="16" rx="4" fill="#E0F2F3"/>
+          <text x="20" y="53" font-family="monospace" font-size="8" fill="#0A5C66">BB: 12 kg</text>
+          <rect x="14" y="66" width="172" height="30" rx="6" fill="#fff" stroke="#E2E8F0"/>
+          <text x="20" y="78" font-family="monospace" font-size="7" fill="#334155">Midazolam - 2 mcg/kg/mnt</text>
+          <text x="20" y="90" font-family="monospace" font-size="9" font-weight="700" fill="#0E7C86">1.44 mL/jam</text>
+          <rect x="14" y="102" width="172" height="30" rx="6" fill="#fff" stroke="#E2E8F0"/>
+          <text x="20" y="114" font-family="monospace" font-size="7" fill="#334155">Norepinefrin - 0.1 mcg/kg/mnt</text>
+          <text x="20" y="126" font-family="monospace" font-size="9" font-weight="700" fill="#7C3AED">0.72 mL/jam</text>
+        </svg>
+      </div>
+      <div class="proj-content">
+        <h3><a href="https://pedidrip2.netlify.app/" target="_blank" rel="noopener">PediDrip</a><span class="live">LIVE</span></h3>
+        <p class="tagline">Pediatric continuous-infusion calculator · 14 drugs</p>
+        <p>
+          Weight-based syringe-pump rate calculator for PICU continuous infusions —
+          sedation, vasoactives, and neuromuscular blockers across five dosing-unit systems.
+          Designed around patient safety: no data persists between patients, color appears
+          only when it carries clinical meaning, and every screen assumes a two-nurse double check.
+        </p>
+        <p class="stack">
+          <span>HTML</span> <span>CSS</span> <span>JavaScript</span> <span>Netlify</span> <span>GitHub Pages</span>
+        </p>
+      </div>
+    </article>
+
+    <article class="proj">
+      <div class="thumb" aria-hidden="true">
+        <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+          <rect width="200" height="150" fill="#F8FAFC"/>
+          <text x="16" y="20" font-family="monospace" font-size="7" font-weight="700" fill="#64748B">FOOTSAFE-90</text>
+          <path d="M50 34 L50 84 L100 84" stroke="#0E7C86" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M50 74 L60 74 L60 84" stroke="#0E7C86" stroke-width="1.2" fill="none" opacity=".55"/>
+          <text x="64" y="68" font-family="monospace" font-size="11" font-weight="700" fill="#0E7C86">90&#176;</text>
+          <text x="108" y="48" font-family="monospace" font-size="6" fill="#334155">ankle position</text>
+          <text x="108" y="60" font-family="monospace" font-size="6" fill="#334155">pressure points</text>
+          <text x="108" y="72" font-family="monospace" font-size="6" fill="#334155">repositioning</text>
+          <text x="108" y="84" font-family="monospace" font-size="6" fill="#334155">daily screening</text>
+          <line x1="16" y1="98" x2="184" y2="98" stroke="#E2E8F0"/>
+          <text x="16" y="112" font-family="monospace" font-size="6" fill="#64748B">PDCA cycle</text>
+          <rect x="16" y="118" width="34" height="9" rx="2" fill="#0E7C86"/>
+          <rect x="54" y="118" width="34" height="9" rx="2" fill="#0E7C86" opacity=".7"/>
+          <rect x="92" y="118" width="34" height="9" rx="2" fill="#0E7C86" opacity=".45"/>
+          <rect x="130" y="118" width="34" height="9" rx="2" fill="#0E7C86" opacity=".22"/>
+          <text x="16" y="141" font-family="monospace" font-size="5.5" fill="#64748B">Excel dashboards - Chart.js - QI reporting</text>
+        </svg>
+      </div>
+      <div class="proj-content">
+        <h3>FOOTSAFE-90</h3>
+        <p class="tagline">Foot drop &amp; pressure injury prevention programme</p>
+        <p>
+          A quality-improvement programme across ICU and PICU, built on a problem that moves
+          quietly: immobilised patients lose ankle function and skin integrity over days
+          nobody is counting. Eligibility screening runs off Excel dashboards, progress is
+          tracked in interactive Chart.js visualisations, and the whole cycle is documented
+          in a PDCA framework with implementation reporting.
+        </p>
+        <p class="stack">
+          <span>Excel</span> <span>Chart.js</span> <span>PDCA</span> <span>Quality improvement</span>
+        </p>
+      </div>
+    </article>
+
+    <article class="proj">
+      <div class="thumb" aria-hidden="true">
+        <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+          <rect width="200" height="150" fill="#F8FAFC"/>
+          <text x="16" y="20" font-family="monospace" font-size="7" font-weight="700" fill="#64748B">NEWS2 AUTOSCORE</text>
+          <text x="16" y="38" font-family="monospace" font-size="6" fill="#334155">RR 24</text>
+          <text x="16" y="50" font-family="monospace" font-size="6" fill="#334155">SpO2 92</text>
+          <text x="16" y="62" font-family="monospace" font-size="6" fill="#334155">BP 98</text>
+          <text x="16" y="74" font-family="monospace" font-size="6" fill="#334155">HR 118</text>
+          <text x="16" y="86" font-family="monospace" font-size="6" fill="#334155">Temp 38.4</text>
+          <path d="M62 60 L82 60" stroke="#94A3B8" stroke-width="1.2"/>
+          <path d="M78 56 L82 60 L78 64" stroke="#94A3B8" stroke-width="1.2" fill="none"/>
+          <circle cx="122" cy="60" r="27" fill="#fff" stroke="#B4232A" stroke-width="2.5"/>
+          <text x="122" y="60" font-family="monospace" font-size="18" font-weight="700" fill="#B4232A" text-anchor="middle">7</text>
+          <text x="122" y="72" font-family="monospace" font-size="5.5" fill="#64748B" text-anchor="middle">NEWS2</text>
+          <rect x="16" y="99" width="42" height="8" rx="2" fill="#22C55E"/>
+          <rect x="60" y="99" width="42" height="8" rx="2" fill="#EAB308"/>
+          <rect x="104" y="99" width="42" height="8" rx="2" fill="#D97757"/>
+          <rect x="148" y="99" width="36" height="8" rx="2" fill="#B4232A"/>
+          <rect x="16" y="114" width="168" height="17" rx="4" fill="#FDE7E7"/>
+          <text x="24" y="126" font-family="monospace" font-size="6.5" font-weight="700" fill="#B4232A">Escalate - urgent clinical review</text>
+          <text x="16" y="144" font-family="monospace" font-size="5.5" fill="#64748B">prototype - HL7 pipeline scoping</text>
+        </svg>
+      </div>
+      <div class="proj-content">
+        <h3>NEWS2 Early Warning Automation</h3>
+        <p class="tagline">Prototype &middot; manual scoring to automated escalation</p>
+        <p>
+          A working HTML prototype that turns the manual NEWS2 workflow into automatic scoring
+          with escalation alerts &mdash; the difference between a score calculated when someone
+          remembers to and one that appears the moment observations are entered. Currently
+          scoping an HL7 pipeline to pull vitals straight from Nihon Kohden and Mindray
+          bedside monitors.
+        </p>
+        <p class="stack">
+          <span>HTML</span> <span>JavaScript</span> <span>NEWS2</span> <span>HL7 (scoping)</span>
+        </p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="wrap" id="ai-work">
+  <div class="section-header">
+    <h2>AI Training &amp; Annotation <span class="badge-count">6</span></h2>
+    <span class="section-sub">Active engagements &middot; fully remote</span>
+  </div>
+  <div class="engage">
+
+    <div class="engage-item">
+      <div>
+        <h3>Data Trainer &mdash; computer-use agent tasks</h3>
+        <p class="who">SME Solutions / SuperAnnotate</p>
+      </div>
+      <span class="when">Jul 2026 &mdash; now</span>
+      <p class="what">
+        Authors CUA tasks in a structured Environment Setup &rarr; User Request &rarr; Sub-Tasks
+        format, designing realistic multi-application desktop workflows. Screen-records and
+        annotates the tasks end to end, segmenting recordings into labelled sub-tasks and
+        marking decision points. All personas built from de-identified mock data.
+      </p>
+    </div>
+
+    <div class="engage-item">
+      <div>
+        <h3>AI Trainer &mdash; egocentric video</h3>
+        <p class="who">TELUS International AI Community</p>
+      </div>
+      <span class="when">2026 &mdash; now</span>
+      <p class="what">
+        Captures and annotates first-person video to project specification, applying dense
+        guidelines consistently across long batches and documenting ambiguous cases for
+        guideline clarification.
+      </p>
+    </div>
+
+    <div class="engage-item">
+      <div>
+        <h3>Voice AI Evaluator &mdash; live speech-to-speech</h3>
+        <p class="who">RWS</p>
+      </div>
+      <span class="when">2026 &mdash; now</span>
+      <p class="what">
+        Runs side-by-side ELO comparisons of live speech-to-speech output, scoring naturalness,
+        instruction-following and latency-related quality, with written justification for each
+        preference judgement.
+      </p>
+    </div>
+
+    <div class="engage-item">
+      <div>
+        <h3>Speech Data Annotator &mdash; Indonesian (id-ID)</h3>
+        <p class="who">OneForma &amp; Welocalize</p>
+      </div>
+      <span class="when">2026 &mdash; now</span>
+      <p class="what">
+        Transcribes and quality-checks spontaneous Indonesian speech &mdash; code-switching,
+        regional accents and overlapping audio included.
+      </p>
+    </div>
+
+    <div class="engage-item">
+      <div>
+        <h3>Video Action Labelling &mdash; object manipulation</h3>
+        <p class="who">Atlas Capture</p>
+      </div>
+      <span class="when">2026</span>
+      <p class="what">
+        Labels hand-action segments under a strict imperative-sentence convention, holding
+        verb granularity consistent across clips.
+      </p>
+    </div>
+
+    <div class="engage-item">
+      <div>
+        <h3>UI Design Evaluation &mdash; rubric-based</h3>
+        <p class="who">Designarena / Multimango</p>
+      </div>
+      <span class="when">2026</span>
+      <p class="what">
+        Scores interface designs against a multi-criterion rubric, producing reproducible
+        results with written rationale.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<section class="wrap" id="skills">
+  <div class="section-header">
+    <h2>Skills <span class="badge-count">6</span></h2>
+    <span class="section-sub">Annotation · data · build · clinical</span>
+  </div>
+  <div class="skillgrid">
+    <div class="skill"><span><span class="skill-icon"></span>Annotation &amp; evaluation</span><span>transcription · video labelling · ELO · rubric</span></div>
+    <div class="skill"><span><span class="skill-icon"></span>Data &amp; analysis</span><span>Python · SQL · Excel · Tableau</span></div>
+    <div class="skill"><span><span class="skill-icon"></span>Build &amp; deploy</span><span>HTML · JS · Chart.js · Git · Netlify</span></div>
+    <div class="skill"><span><span class="skill-icon"></span>Design</span><span>Figma · UI/UX · wireframing</span></div>
+    <div class="skill"><span><span class="skill-icon"></span>Clinical systems</span><span>EMR · SISMADAK · NEWS2 · antibiogram</span></div>
+    <div class="skill"><span><span class="skill-icon"></span>Languages</span><span>Indonesian (native) · English (professional)</span></div>
+  </div>
+</section>
+
+<section class="wrap" id="experience">
+  <div class="section-header">
+    <h2>Clinical Experience <span class="badge-count">3</span></h2>
+    <span class="section-sub">17 years at one tertiary referral hospital</span>
+  </div>
+
+  <div class="timeline">
+    <div class="job">
+      <time>Feb 2026 — now</time>
+      <h3>Advanced Nurse (Perawat Mahir), Grade III/a — ICU / ITI</h3>
+      <p class="org">RSUD Dr. Saiful Anwar (RSSA), Malang — tertiary referral hospital, East Java</p>
+      <p>
+        Manages critically ill adults on ventilatory and vasoactive support, documenting
+        continuously in the hospital EMR and SISMADAK quality systems.
+      </p>
+    </div>
+
+    <div class="job">
+      <time>Mar 2019 — Jan 2026</time>
+      <h3>Registered Nurse (Perawat Terampil) — PICU</h3>
+      <p class="org">RSUD Dr. Saiful Anwar (RSSA), Malang</p>
+      <p>
+        Paediatric intensive care, weight-based drug calculation, and unit-level quality
+        indicator data collection. Clinical instructor and data coordinator for the PICU
+        training programme, including its participant forms and competency logbook.
+      </p>
+    </div>
+
+    <div class="job">
+      <time>2009 — 2019</time>
+      <h3>Registered Nurse — Internal Medicine Ward</h3>
+      <p class="org">RSUD Dr. Saiful Anwar (RSSA), Malang</p>
+      <p>
+        Ten years of general inpatient care before moving into intensive care.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="wrap" id="certifications">
+  <div class="section-header">
+    <h2>Education &amp; Certification <span class="badge-count">5</span></h2>
+    <span class="section-sub">Credentials</span>
+  </div>
+  <ul class="certs">
+    <li>
+      <span class="name">
+        <svg class="cert-mark" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <rect x="1.5" y="9" width="3" height="5.5" rx="1" fill="currentColor"/>
+          <rect x="6.5" y="5" width="3" height="9.5" rx="1" fill="currentColor"/>
+          <rect x="11.5" y="1.5" width="3" height="13" rx="1" fill="currentColor"/>
+        </svg>
+        Google Data Analytics Certificate
+      </span>
+      <span class="by">Google</span>
+    </li>
+    <li>
+      <span class="name">
+        <svg class="cert-mark" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M8 1.5 15 5 8 8.5 1 5 8 1.5Z" fill="currentColor"/>
+          <path d="M3.5 6.8V10c0 1.4 2 2.5 4.5 2.5s4.5-1.1 4.5-2.5V6.8" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+        </svg>
+        Bachelor of Nursing (S.Kep., Ners)
+      </span>
+      <span class="by">STIKES Maharani Malang</span>
+    </li>
+    <li>
+      <span class="name">
+        <svg class="cert-mark" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M4 1.5v4a4 4 0 0 0 8 0v-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+          <path d="M8 9.5v2a3 3 0 0 0 6 0v-1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+          <circle cx="14" cy="9.5" r="1.6" fill="currentColor"/>
+        </svg>
+        Diploma III of Nursing
+      </span>
+      <span class="by">Poltekkes Kemenkes Malang</span>
+    </li>
+    <li>
+      <span class="name">
+        <svg class="cert-mark" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M6 4.5 2.5 8 6 11.5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M10 4.5 13.5 8 10 11.5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Python Programming
+      </span>
+      <span class="by">Coursera · 2026</span>
+    </li>
+    <li>
+      <span class="name">
+        <svg class="cert-mark" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <rect x="1.8" y="2.5" width="12.4" height="11" rx="2" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M1.8 6.2h12.4M6 6.2v7.3" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+        UI/UX Design &amp; Figma
+      </span>
+      <span class="by">2026</span>
+    </li>
+  </ul>
+</section>
+
+<section class="wrap contact" id="contact">
+  <div class="section-header">
+    <h2>Contact</h2>
+    <span class="section-sub">Let's build something</span>
+  </div>
+  <p>
+    Looking for someone who understands both a patient monitor and a data pipeline?
+    I take on AI training, annotation, and health-data work at 20–30 hours per week,
+    fully remote — based in UTC+7 with regular overlap into Asia-Pacific, European,
+    and US morning hours.
+  </p>
+  <div class="contact-links">
+    <a class="primary" href="mailto:lailatussiyamu@gmail.com">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <rect x="1" y="3" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M1.8 4 8 8.6 14.2 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      Email me
+    </a>
+    <a href="https://www.linkedin.com/in/lailatussiyamu/" target="_blank" rel="noopener">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+        <path d="M3.6 5.8H1.2V14h2.4V5.8ZM2.4 1.6a1.4 1.4 0 1 0 0 2.8 1.4 1.4 0 0 0 0-2.8ZM14.8 9.4c0-2.3-1.2-3.8-3.2-3.8-1.1 0-1.9.5-2.3 1.1V5.8H6.9c0 .7 0 8.2 0 8.2h2.4V9.4c0-.2 0-.4.1-.6.2-.5.6-1 1.3-1 .9 0 1.4.7 1.4 1.8V14h2.4V9.4Z"/>
+      </svg>
+      LinkedIn
+    </a>
+    <a href="https://github.com/lailatussiyamu-cmd" target="_blank" rel="noopener">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+        <path d="M8 .8a7.2 7.2 0 0 0-2.3 14c.4.1.5-.1.5-.4v-1.3c-2 .4-2.4-1-2.4-1-.4-.8-.8-1-.8-1-.7-.5 0-.5 0-.5.7 0 1.1.8 1.1.8.7 1.1 1.7.8 2.1.6.1-.5.3-.8.5-1-1.6-.2-3.3-.8-3.3-3.6 0-.8.3-1.5.8-2 0-.2-.4-.9.1-2 0 0 .6-.2 2 .7a6.9 6.9 0 0 1 3.6 0c1.4-.9 2-.7 2-.7.5 1.1.1 1.8.1 2 .5.5.8 1.2.8 2 0 2.9-1.7 3.5-3.3 3.6.3.2.5.7.5 1.4v2c0 .3.1.5.5.4A7.2 7.2 0 0 0 8 .8Z"/>
+      </svg>
+      GitHub
+    </a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>© 2026 Lailatus Siyamu Nurrohmi · Built by hand, one HTML file, no framework.</p>
+  </div>
+</footer>
+
+</body>
+</html>
