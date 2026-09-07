@@ -232,6 +232,17 @@ body {
   z-index: 1;
 }
 
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 40px;
+  align-items: start;
+}
+
+.hero-content {
+  min-width: 0;
+}
+
 .status {
   display: inline-flex;
   align-items: center;
@@ -305,11 +316,163 @@ body {
   transition: color 0.4s ease;
 }
 
+.quote-card {
+  margin: 0 0 16px;
+  padding: 20px 28px;
+  background: var(--bg);
+  border-radius: var(--radius);
+  border-left: 4px solid var(--accent);
+  max-width: 48ch;
+  transition: background 0.4s ease, border-color 0.4s ease;
+}
+
+.quote-card p {
+  font-family: "Outfit", sans-serif;
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--text);
+  font-style: italic;
+  transition: color 0.4s ease;
+}
+
+.quote-card .attribution {
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  font-style: normal;
+  margin-top: 4px;
+  transition: color 0.4s ease;
+}
+
+.hero-avatar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding-top: 12px;
+  flex-shrink: 0;
+}
+
+.avatar-frame {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  padding: 4px;
+  background: var(--accent-gradient);
+  box-shadow: 0 8px 32px rgba(15, 110, 122, 0.2);
+  transition: all 0.4s var(--transition);
+}
+
+.avatar-frame:hover {
+  transform: scale(1.04) rotate(-2deg);
+  box-shadow: 0 12px 48px rgba(15, 110, 122, 0.3);
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  background: var(--bg);
+  border: 3px solid var(--surface);
+}
+
+.avatar-ring {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  background: var(--accent-gradient) border-box;
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: spin-ring 8s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes spin-ring {
+  to { transform: rotate(360deg); }
+}
+
+.avatar-status {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #22C55E;
+  border: 3px solid var(--surface);
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.4);
+  animation: pulse-dot 2.4s ease-in-out infinite;
+}
+
+.avatar-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: var(--bg);
+  padding: 4px 14px;
+  border-radius: 99px;
+  border: 1px solid var(--border);
+  transition: all 0.3s ease;
+}
+
+.avatar-frame:hover + .avatar-label {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.ecg-container {
+  margin: 8px 0 16px;
+  width: 100%;
+  max-width: 560px;
+  overflow: hidden;
+  opacity: 0.7;
+}
+
+.ecg-line {
+  width: 100%;
+  height: 44px;
+  display: block;
+}
+
+.ecg-line polyline {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1200;
+  stroke-dashoffset: 1200;
+  animation: ecg-draw 2.8s ease-out forwards, ecg-pulse 3s ease-in-out infinite 2.8s;
+}
+
+@keyframes ecg-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes ecg-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+[data-theme="dark"] .ecg-line polyline {
+  stroke: #1A8A96;
+}
+
 .stats {
   display: flex;
   flex-wrap: wrap;
   gap: 28px 48px;
-  padding-top: 24px;
+  padding-top: 20px;
   border-top: 1px solid var(--border);
   transition: border-color 0.4s ease;
 }
@@ -340,36 +503,6 @@ body {
 .stat-item .label strong {
   color: var(--text-secondary);
   font-weight: 600;
-  transition: color 0.4s ease;
-}
-
-.quote-card {
-  margin: 32px 0 0;
-  padding: 20px 28px;
-  background: var(--bg);
-  border-radius: var(--radius);
-  border-left: 4px solid var(--accent);
-  max-width: 48ch;
-  transition: background 0.4s ease, border-color 0.4s ease;
-}
-
-.quote-card p {
-  font-family: "Outfit", sans-serif;
-  font-weight: 400;
-  font-size: 17px;
-  line-height: 1.5;
-  color: var(--text);
-  font-style: italic;
-  transition: color 0.4s ease;
-}
-
-.quote-card .attribution {
-  font-family: "Inter", sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-muted);
-  font-style: normal;
-  margin-top: 4px;
   transition: color 0.4s ease;
 }
 
@@ -883,6 +1016,27 @@ footer p {
   .navbar .brand { font-size: 13px; }
   .navbar .nav-links a { font-size: 11px; padding: 4px 10px; }
   .hero { padding: 32px 0 40px; }
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .hero-avatar {
+    flex-direction: row;
+    gap: 16px;
+    padding-top: 0;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .avatar-frame {
+    width: 100px;
+    height: 100px;
+  }
+  .avatar-status {
+    width: 14px;
+    height: 14px;
+    bottom: 4px;
+    right: 4px;
+  }
   section { padding: 36px 0; }
   .stats { gap: 16px 28px; }
   .stat-item .number { font-size: 24px; }
@@ -890,11 +1044,14 @@ footer p {
   .quote-card p { font-size: 15px; }
   .cert-item { flex-direction: column; align-items: flex-start; }
   .theme-toggle .label { display: none; }
+  .ecg-container { max-width: 100%; }
 }
 
 @media (max-width: 480px) {
   .container { padding: 0 16px; }
   .navbar .nav-links a { font-size: 10px; padding: 3px 8px; }
+  .avatar-frame { width: 80px; height: 80px; }
+  .avatar-label { font-size: 9px; padding: 2px 12px; }
   .skills-grid { grid-template-columns: 1fr; }
   .contact-links a { flex: 1; justify-content: center; }
   .project-card { padding: 14px; }
@@ -910,12 +1067,16 @@ footer p {
     transform: none !important;
   }
   .status-dot { animation: none; }
+  .avatar-status { animation: none; }
+  .avatar-ring { animation: none; }
+  .ecg-line polyline { stroke-dashoffset: 0; animation: none; }
   .project-card:hover { transform: none !important; }
   .project-card:hover .thumb { transform: none !important; }
   .engagement-item:hover { transform: none !important; }
   .cert-item:hover { transform: none !important; }
   .contact-links a:hover { transform: none !important; }
   .theme-toggle:hover { transform: none !important; }
+  .avatar-frame:hover { transform: none !important; }
 }
 </style>
 </head>
@@ -941,33 +1102,86 @@ footer p {
 <header class="hero fade-section visible" id="hero">
   <div class="container">
 
-    <div class="status">
-      <span class="status-dot"></span>
-      Malang, Indonesia · UTC+7 · 20–30 hrs/week · fully remote
-    </div>
+    <div class="hero-grid">
 
-    <h1>
-      Lailatus Siyamu<br>
-      <span class="highlight">Nurrohmi</span>
-    </h1>
+      <div class="hero-content">
+        <div class="status">
+          <span class="status-dot"></span>
+          Malang, Indonesia · UTC+7 · 20–30 hrs/week · fully remote
+        </div>
 
-    <p class="subhead">
-      Critical Care Nurse <strong>×</strong> AI Training &amp; Health Data
-    </p>
+        <h1>
+          Lailatus Siyamu<br>
+          <span class="highlight">Nurrohmi</span>
+        </h1>
 
-    <p class="lede">
-      Seventeen years of hospital nursing, the last seven in intensive care,
-      taught me what good data looks like — and what happens when it's wrong.
-      Today I split my time between AI training across six platforms and
-      health-data projects that clinicians actually use at the bedside.
-    </p>
+        <p class="subhead">
+          Critical Care Nurse <strong>×</strong> AI Training &amp; Health Data
+        </p>
 
-    <div class="quote-card">
-      <p>
-        &ldquo;In critical care, a misplaced decimal is a wrong dose.
-        Data deserves the same double check.&rdquo;
-      </p>
-      <div class="attribution">&mdash; Lailatus Siyamu Nurrohmi</div>
+        <p class="lede">
+          Seventeen years of hospital nursing, the last seven in intensive care,
+          taught me what good data looks like — and what happens when it's wrong.
+          Today I split my time between AI training across six platforms and
+          health-data projects that clinicians actually use at the bedside.
+        </p>
+
+        <div class="quote-card">
+          <p>
+            &ldquo;In critical care, a misplaced decimal is a wrong dose.
+            Data deserves the same double check.&rdquo;
+          </p>
+          <div class="attribution">&mdash; Lailatus Siyamu Nurrohmi</div>
+        </div>
+
+        <div class="ecg-container" aria-hidden="true">
+          <svg class="ecg-line" viewBox="0 0 800 60" preserveAspectRatio="none">
+            <polyline points="
+              0,30 
+              80,30 
+              100,30 
+              120,12 
+              140,48 
+              160,18 
+              180,30 
+              280,30 
+              300,30 
+              320,12 
+              340,48 
+              360,18 
+              380,30 
+              480,30 
+              500,30 
+              520,10 
+              540,50 
+              560,16 
+              580,30 
+              680,30 
+              700,30 
+              720,12 
+              740,48 
+              760,18 
+              780,30 
+              800,30
+            "/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="hero-avatar">
+        <div class="avatar-frame">
+          <img 
+            src="https://ui-avatars.com/api/?name=Lailatus+Siyamu+Nurrohmi&size=200&background=0F6E7A&color=fff&bold=true&font-size=0.5" 
+            alt="Lailatus Siyamu Nurrohmi"
+            class="avatar-img"
+            loading="lazy"
+          >
+          <div class="avatar-ring"></div>
+          <div class="avatar-status"></div>
+        </div>
+        <div class="avatar-label">RN, BSN</div>
+      </div>
+
     </div>
 
     <div class="stats" id="stats">
@@ -1495,7 +1709,6 @@ footer p {
 </footer>
 
 <script>
-// ─── SCROLL FADE ───
 const fadeSections = document.querySelectorAll('.fade-section:not(.visible)');
 
 const observer = new IntersectionObserver((entries) => {
@@ -1511,7 +1724,6 @@ const observer = new IntersectionObserver((entries) => {
 
 fadeSections.forEach(section => observer.observe(section));
 
-// ─── COUNTER ANIMATION ───
 const statNumbers = document.querySelectorAll('.stat-item .number');
 let countersAnimated = false;
 
@@ -1558,7 +1770,6 @@ if (statsContainer) {
   counterObserver.observe(statsContainer);
 }
 
-// ─── DARK MODE TOGGLE ───
 const toggle = document.getElementById('themeToggle');
 const icon = document.getElementById('themeIcon');
 const label = document.getElementById('themeLabel');
@@ -1600,7 +1811,6 @@ toggle.addEventListener('keydown', (e) => {
   }
 });
 
-// ─── NAVBAR ACTIVE LINK ───
 const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
 const sections = document.querySelectorAll('section[id], header[id]');
 
@@ -1627,7 +1837,6 @@ const updateActiveLink = () => {
 window.addEventListener('scroll', updateActiveLink);
 window.addEventListener('load', updateActiveLink);
 
-// ─── NAVBAR SHADOW ON SCROLL ───
 const navbar = document.getElementById('navbar');
 window.addEventListener('scroll', () => {
   if (window.scrollY > 20) {
@@ -1637,7 +1846,6 @@ window.addEventListener('scroll', () => {
   }
 });
 
-// ─── CONSOLE DEBUG ───
 console.log('✅ Portfolio loaded successfully');
 console.log('📊 Fade sections:', fadeSections.length);
 console.log('🔢 Stat counters:', statNumbers.length);
